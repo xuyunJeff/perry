@@ -1,15 +1,25 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import App from './App'
-import router from './router'
+import Vue from "vue";
+// import "vant/lib/index.css";
+import App from "./App.vue";
+import router from "./router/index";
+// import "@/assets/style/font/iconfont.css";
+import "@/assets/style/index.less";
+import $axios from "@/utils/request";
+import mixin from "./mixin/index";
+import store from "./store/index";
 
-Vue.config.productionTip = false
+import "@/components/Vant";
+// rem
+import "amfe-flexible";
+// 把变量挂载到vue的原型上
+Vue.prototype.$axios = $axios;
 
-/* eslint-disable no-new */
+Vue.mixin(mixin);
+
+Vue.config.productionTip = false;
+
 new Vue({
-  el: '#app',
+  store,
   router,
-  components: { App },
-  template: '<App/>'
-})
+  render: h => h(App)
+}).$mount("#app");
