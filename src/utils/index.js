@@ -1,6 +1,4 @@
-import {
-    Toast
-} from 'vant';
+import { Toast } from 'vant';
 
 export const loading = (flag) => {
     if (flag) {

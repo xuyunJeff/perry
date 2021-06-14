@@ -2,14 +2,14 @@
   <header class="login">
     <van-icon name="point-gift-o" class="orange mt-30 logo"></van-icon>
     <div class>
-      <!-- 手机号码 -->
       <div class="handset ml-20 mr-20 flex jc-sb pb-5">
-        <input v-model="phone" class="f14" type="text" placeholder="手机号" />
-        <input class="gray f12 bg-fff" type="button" value=" 获取验证码" />
+        <input v-model="username" class="f14" type="text" placeholder="账号" />
       </div>
-      <!-- 验证码 -->
+      <div class="handset ml-20 mr-20 flex jc-sb pb-5">
+        <input v-model="password" class="f14" type="password" placeholder="密码" />
+      </div>
       <div class="handset ml-20 mr-20 flex jc-sb mt-20 pb-5">
-        <input v-model="smsCode" class="f14" placeholder="验证码" />
+        <input v-model="code" class="f14" placeholder="谷歌验证码" />
       </div>
 
       <!-- 登录 -->
@@ -23,26 +23,31 @@
 export default {
   data() {
     return {
-      phone: "13800000000",
-      smsCode: "123456"
+      username: "",
+      password: "",
+      code: ""
     };
   },
   methods: {
     login() {
-      let url = "/login";
+      let url = "/wap/login";
       // 请求参数
       let data = {
-        phone: this.phone,
-        smsCode: this.smsCode
+        username: this.username,
+        password: this.password,
+        code: this.code
       };
       this.$axios.post(url, data).then(res => {
+        console.log(res)
         // 修改登陆状态
         this.$store.commit("updateLogin", true);
         // 把token存入store
-        this.$store.commit("updateToken", res.user.token);
-        // 把用户名存入store
-        this.$store.commit("updateUsername", res.user.phone);
-        this.$router.push("/index");
+        let token = "JSESSIONID=" + res.token;
+        localStorage.setItem("token",token)
+        localStorage.setItem("username",this.username)
+        this.$store.commit("updateToken", token);
+        this.$store.commit("updateUsername", this.username);
+        this.$router.push("/center");
       }).catch(err=> {
         console.log('登陆失败')
       });

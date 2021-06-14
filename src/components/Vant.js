@@ -16,9 +16,15 @@ import {
   NavBar,
   CellGroup,
   Image,
-  Sticky
+  Sticky,
+  RadioGroup,
+  Radio,
+  Search
 } from "vant";
 
+Vue.use(Search);
+Vue.use(RadioGroup);
+Vue.use(Radio);
 Vue.use(Icon);
 Vue.use(Tab);
 Vue.use(Tabs);
