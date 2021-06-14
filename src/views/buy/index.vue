@@ -2,17 +2,17 @@
   <div>
     <van-nav-bar title="交易"/>
     <van-cell-group>
-      <van-field v-model="data.createTime" type="date" placeholder="时间" />
-      <van-field v-model="data.merchantName" placeholder="商户名" />
-      <van-field v-model="data.thirdBillId" placeholder="第三方订单号" />
-      <van-field v-model="data.billId" placeholder="订单号" />
+      <van-field v-model="data.createTime" type="date" placeholder="时间"/>
+      <van-field v-model="data.merchantName" placeholder="商户名"/>
+      <van-field v-model="data.thirdBillId" placeholder="第三方订单号"/>
+      <van-field v-model="data.billId" placeholder="订单号"/>
       <select v-model="data.billStatus">
-        <option  v-bind:value="0">请选择</option>
-        <option  v-bind:value="1">未支付</option>
-        <option  v-bind:value="2">成功</option>
-        <option  v-bind:value="3">失败</option>
+        <option v-bind:value="0">请选择</option>
+        <option v-bind:value="1">未支付</option>
+        <option v-bind:value="2">成功</option>
+        <option v-bind:value="3">失败</option>
       </select>
-      <van-button type="default">搜索</van-button>
+      <van-button type="default" @click="query">搜索</van-button>
       <van-button type="default">下载</van-button>
     </van-cell-group>
     <div class="container">
@@ -20,9 +20,9 @@
         <van-cell
             v-for="(item,index) in list"
             :key="index"
-            :title="item.id"
+            :title="item.id+'  '+item.createTime"
             :label="item.thirdBillId"
-            :value="item.price + '  '+ item.billStatus+'  ' + item.notice+'  ' + item.bankCardNo+'    ' + item.bankName+'  ' + item.bankAccountName"
+            :value="'￥'+item.price + '  '+ getBillStatus(item)+'  ' + getNotice(item)+'  ' + item.bankCardNo+'    ' + item.bankName+'  ' + item.bankAccountName"
         />
       </van-list>
     </div>
@@ -33,18 +33,19 @@
 
 <script>
 import Footer from "@/components/Footer";
+import {mapGetters} from "vuex";
 
 export default {
   data() {
     return {
       baseURL: "/apiV1/billOut/",
-      data :{
-        sortOrder:"asc",
-        pageSize:10,
-        pageNumber:1,
-        merchantName:"",
-        thirdBillId:"",
-        billId:"",
+      data: {
+        sortOrder: "asc",
+        pageSize: 10,
+        pageNumber: 1,
+        merchantName: "",
+        thirdBillId: "",
+        billId: "",
         billStatus: "",
         createTime: ""
       },
@@ -103,23 +104,76 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters(["username", "isLogin"])
+  },
   created() {
+    if(!this.isLogin){
+      this.$router.push("/login")
+    }
     let index = this.active + 1;
     this.list = this[`list${index}`]; // this.list1
-    // this.getGoods();
+    this.query();
   },
   components: {
     Footer
   },
   methods: {
     query() {
-      let url = this.baseURL + "/wap/list/"
-      let data ={
-        sortOrder:"asc",
-        pageSize:10,
-        pageNumber:1
+      let url = this.baseURL + "wap/list/"
+      let token = localStorage.getItem("token")
+      let data = this.data
+      if(data.billStatus == "0"){
+        data.billStatus = ""
       }
+      this.$axios.post(url, data).then(res => {
+        console.log(res)
+        this.list = res.page.rows
+        console.log(this.list)
+      }).catch(err => {
+        console.log('登陆失败')
+      });
+    },
+    download() {
 
+    },
+    getBillStatus(row){
+      if (row.billStatus == 1) {
+        let msg ="未支付";
+        if(row.isLock == 1) {
+          msg += " 已锁"
+        }
+        if(row.isLock == 0) {
+          msg += " 未锁"
+        }
+        return msg
+      }
+      if (row.billStatus == 2) {
+
+        return "成功"
+      }
+      if (row.billStatus == 3) {
+        return "失败"
+      }
+    },
+    getNotice(row){
+      let noticeMsg = "";
+      if (row.noticeMsg && row.noticeMsg != null) {
+        if (row.noticeMsg == "成功,已作废订单" || row.noticeMsg == "成功,已确认出款") {
+          noticeMsg = ": " + row.noticeMsg
+        } else {
+          noticeMsg = ": <span style='color: blue'>" + row.noticeMsg + "</span>"
+        }
+      }
+      if (row.notice == 1) {
+        return  "未通知"+ noticeMsg
+      }
+      if (row.notice == 2) {
+        return "已通知" + noticeMsg
+      }
+      if (row.notice == 3) {
+        return "通知失败" + noticeMsg
+      }
     }
   }
 };

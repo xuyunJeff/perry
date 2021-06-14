@@ -47,7 +47,7 @@ export default {
         localStorage.setItem("username",this.username)
         this.$store.commit("updateToken", token);
         this.$store.commit("updateUsername", this.username);
-        this.$router.push("/center");
+        this.$router.push("/my");
       }).catch(err=> {
         console.log('登陆失败')
       });

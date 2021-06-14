@@ -29,7 +29,6 @@ export default {
   components: {
     Footer
   },
-
   computed: {
     ...mapGetters(["username", "isLogin"])
   }
