@@ -18,7 +18,8 @@
     "echarts": "^4.2.1",
     "style-loader": "^1.0.0",
     "vue": "^2.6.10",
-    "vuex-persistedstate": "^2.5.4"
+    "vuex-persistedstate": "^2.5.4",
+    "y18n": "^5.0.8"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",

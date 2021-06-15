@@ -6,21 +6,36 @@
       <van-field v-model="data.merchantName" placeholder="商户名"/>
       <van-field v-model="data.thirdBillId" placeholder="第三方订单号"/>
       <van-field v-model="data.billId" placeholder="订单号"/>
-      <select v-model="data.billStatus">
-        <option v-bind:value="0">请选择</option>
-        <option v-bind:value="1">未支付</option>
-        <option v-bind:value="2">成功</option>
-        <option v-bind:value="3">失败</option>
-      </select>
-      <van-button type="default" @click="query">搜索</van-button>
-      <van-button type="default">下载</van-button>
+      <van-field
+        readonly
+        clickable
+        name="picker"
+        :value="value"
+        placeholder="点击选择订单状态"
+        @click="showPicker = true"
+      />
+      <van-popup v-model="showPicker" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="columns"
+          @confirm="onConfirm"
+          @cancel="showPicker = false"
+        />
+      </van-popup>
+      <div style="margin: 10px;">
+        <van-button type="primary" icon="search" block round @click="query">搜索</van-button>
+      </div>
+      <div style="margin: 10px;">
+        <van-button type="default" icon="down" block round >下载</van-button>
+        <br />
+      </div>
     </van-cell-group>
     <div class="container">
       <van-list style="margin-top: 10px;">
         <van-cell
             v-for="(item,index) in list"
             :key="index"
-            :title="item.id+'  '+item.createTime"
+            :title="item.createTime"
             :label="item.thirdBillId"
             :value="'￥'+item.price + '  '+ getBillStatus(item)+'  ' + getNotice(item)+'  ' + item.bankCardNo+'    ' + item.bankName+'  ' + item.bankAccountName"
         />
@@ -51,57 +66,9 @@ export default {
       },
       active: 0,
       list: [],
-      // 买入数据
-      list1: [
-        {
-          id: "1", price: 400, thirdBillId: 1566893214215, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "李四"
-        },
-        {
-          id: "2", price: 500, thirdBillId: 1566893214216, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "张三"
-        },
-        {
-          id: "3", price: 600, thirdBillId: 1566893214217, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "王五"
-        },
-        {
-          id: "4", price: 400, thirdBillId: 1566893214215, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "李四"
-        },
-        {
-          id: "5", price: 500, thirdBillId: 1566893214216, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "张三"
-        },
-        {
-          id: "6", price: 600, thirdBillId: 1566893214217, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "王五"
-        },
-        {
-          id: "7", price: 400, thirdBillId: 1566893214215, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "李四"
-        },
-        {
-          id: "8", price: 500, thirdBillId: 1566893214216, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "张三"
-        },
-        {
-          id: "9", price: 600, thirdBillId: 1566893214217, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "王五"
-        },
-        {
-          id: "10", price: 400, thirdBillId: 1566893214215, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "李四"
-        },
-        {
-          id: "11", price: 500, thirdBillId: 1566893214216, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "张三"
-        },
-        {
-          id: "12", price: 600, thirdBillId: 1566893214217, billStatus: "未支付", notice: "已通知",
-          bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "王五"
-        },
-      ]
+      value: '',
+      columns: ['全部','未支付', '成功', '失败'],
+      showPicker: false,
     };
   },
   computed: {
@@ -112,7 +79,12 @@ export default {
       this.$router.push("/login")
     }
     let index = this.active + 1;
-    this.list = this[`list${index}`]; // this.list1
+    const obj = {
+      id: "1", price: 400, thirdBillId: 1566893214215, billStatus: 1, notice: 1,createTime: '2021-06-15',
+      bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "李四"
+    };
+    const mockData = new Array(20).fill(obj);
+    this.list = mockData; 
     this.query();
   },
   components: {
@@ -174,6 +146,10 @@ export default {
       if (row.notice == 3) {
         return "通知失败" + noticeMsg
       }
+    },
+    onConfirm(value) {
+      this.value = value;
+      this.showPicker = false;
     }
   }
 };
@@ -181,8 +157,10 @@ export default {
 <style scoped>
 .container {
   width: 100%;
-  height: 20rem;
-  overflow: hidden;
+  padding-bottom: 53px;
+}
+.container .van-cell__title, .container  .van-cell__value {
+  flex: inherit;
 }
 </style>
 

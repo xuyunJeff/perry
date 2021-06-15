@@ -19,7 +19,9 @@ import {
   Sticky,
   RadioGroup,
   Radio,
-  Search
+  Search,
+  Picker,
+  Form
 } from "vant";
 
 Vue.use(Search);
@@ -42,3 +44,5 @@ Vue.use(NavBar);
 Vue.use(CellGroup);
 Vue.use(Image);
 Vue.use(Sticky);
+Vue.use(Picker);
+Vue.use(Form);
