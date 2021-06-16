@@ -14,6 +14,7 @@ service.interceptors.request.use(
             // 给请求头添加laohu-token
             config.headers["user-token"] = store.state.token;
             config.headers["set-cookie"] = store.state.token;
+            config.headers["username"] = store.state.username;
             // config.headers.cookie = store.state.token
         }
         config.data = removeEmptyField(config.data)
@@ -34,7 +35,7 @@ service.interceptors.response.use(
         const res = response.data;
         if (res.code == "0") {
             return res;
-        } else if (res.code == "-1") {
+        } else if (res.code == "-1" || res.code == "500" ) {
             // code为603代表token已经失效,
             // 提示用户,然后跳转到登陆页面
             alert(res.msg)

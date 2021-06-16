@@ -14,8 +14,8 @@ import "amfe-flexible";
 // 把变量挂载到vue的原型上
 Vue.prototype.$axios = $axios;
 $axios.defaults.withCredentials = true
-// $axios.defaults.baseURL = 'http://localhost:16000/bottle-pay/'
-$axios.defaults.baseURL = 'http://45.63.124.216:16000/bottle-pay/'
+$axios.defaults.baseURL = 'http://127.0.0.1:16000/bottle-pay/'
+// $axios.defaults.baseURL = 'http://45.63.124.216:16000/bottle-pay/'
 $axios.defaults.headers = {
     'Access-Control-Allow-Credentials': 'true',
     "Access-Control-Allow-Origin": "*",

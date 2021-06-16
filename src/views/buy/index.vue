@@ -1,7 +1,18 @@
 <template>
   <div>
     <van-nav-bar title="交易"/>
-    <van-cell-group>
+    <van-popup v-model="showSwitch" style="width: 80%">
+      <br /><br />
+      &nbsp;&nbsp;&nbsp; id： {{ billForShow.id }} <br /><br />
+      &nbsp;&nbsp;&nbsp; 金额： ￥ {{ billForShow.price }} <van-button type="default" size="small" @click="copy(billForShow.price)">复制</van-button><br /><br />
+      &nbsp;&nbsp;&nbsp; 银行卡号： {{ billForShow.bankCardNo }} <van-button type="default" size="small" @click="copy(billForShow.bankCardNo)">复制</van-button><br /><br />
+      &nbsp;&nbsp;&nbsp; 银行：{{ billForShow.bankName }}<br /><br />
+      &nbsp;&nbsp;&nbsp; 姓名：{{ billForShow.bankAccountName }} <van-button type="default" size="small" @click="copy(billForShow.bankAccountName)">复制</van-button><br /><br />
+      &nbsp;&nbsp;&nbsp; 第三方订单号：{{ billForShow.thirdBillId }}<br /><br />
+      <div style="color: red">&nbsp;&nbsp;&nbsp;订单状态：{{ getBillStatus(billForShow) }}</div><br /><br />
+      &nbsp;&nbsp;&nbsp; 通知：{{ getNotice(billForShow) }}<br /><br />
+    </van-popup>
+    <van-cell-group id = "top">
       <van-field v-model="data.createTime" type="date" placeholder="时间"/>
       <van-field v-model="data.merchantName" placeholder="商户名"/>
       <van-field v-model="data.thirdBillId" placeholder="第三方订单号"/>
@@ -23,7 +34,7 @@
         />
       </van-popup>
       <div style="margin: 10px;">
-        <van-button type="primary" icon="search" block round @click="query">搜索</van-button>
+        <van-button type="primary" icon="search" block round @click="query(1)">搜索</van-button>
       </div>
       <div style="margin: 10px;">
         <van-button type="default" icon="down" block round >下载</van-button>
@@ -35,9 +46,10 @@
         <van-cell
             v-for="(item,index) in list"
             :key="index"
-            :title="item.createTime"
+            :title="item.id +' '+item.createTime"
             :label="item.thirdBillId"
             :value="'￥'+item.price + '  '+ getBillStatus(item)+'  ' + getNotice(item)+'  ' + item.bankCardNo+'    ' + item.bankName+'  ' + item.bankAccountName"
+            @click="showContent(item)"
         />
       </van-list>
     </div>
@@ -69,31 +81,38 @@ export default {
       value: '',
       columns: ['全部','未支付', '成功', '失败'],
       showPicker: false,
+      showSwitch: false,
+      billForShow: ""
     };
   },
   computed: {
     ...mapGetters(["username", "isLogin"])
   },
+  mounted(){
+    //滑到距离底部一定距离时，自动加载下一页的数据
+    this.scroll();
+  },
   created() {
     if(!this.isLogin){
       this.$router.push("/login")
     }
-    let index = this.active + 1;
-    const obj = {
-      id: "1", price: 400, thirdBillId: 1566893214215, billStatus: 1, notice: 1,createTime: '2021-06-15',
-      bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "李四"
-    };
-    const mockData = new Array(20).fill(obj);
-    this.list = mockData; 
-    this.query();
+    // let index = this.active + 1;
+    // const obj = {
+    //   id: "1", price: 400, thirdBillId: 1566893214215, billStatus: 1, notice: 1,createTime: '2021-06-15',
+    //   bankCardNo: "8888888888888888", bankName: "中国银行", bankAccountName: "李四"
+    // };
+    // const mockData = new Array(20).fill(obj);
+    // this.list = mockData;
+    this.query(1);
   },
   components: {
     Footer
   },
   methods: {
-    query() {
+    query(pageNumber) {
       let url = this.baseURL + "wap/list/"
       let token = localStorage.getItem("token")
+      this.data.pageNumber = pageNumber
       let data = this.data
       if(data.billStatus == "0"){
         data.billStatus = ""
@@ -148,8 +167,42 @@ export default {
       }
     },
     onConfirm(value) {
-      this.value = value;
+      if(value == "未支付"){
+        this.data.billStatus = 1
+      }
+      if(value == "成功"){
+        this.data.billStatus = 2
+      }
+      if(value == "失败"){
+        this.data.billStatus = 3
+      }
       this.showPicker = false;
+    },
+    scroll() {
+      let isLoading = false
+      window.onscroll = () => {
+        // 距离底部200px时加载一次
+        let bottomOfWindow = document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight <= 200
+        if (bottomOfWindow && isLoading == false) {
+          isLoading = true
+          this.data.pageNumber += 1
+          let pageNumber = this.data.pageNumber
+          this.query(pageNumber)
+        }
+      }
+    },
+    showContent(bill){
+      this.showSwitch = true
+      this.billForShow = bill
+    },
+    copy(val){
+      let oInput = document.createElement('input');
+      oInput.value = val;
+      document.body.appendChild(oInput);
+      oInput.select(); // 选择对象;
+      console.log(oInput.value);
+      document.execCommand("Copy", false);
+      oInput.remove()
     }
   }
 };
