@@ -1,28 +1,31 @@
 <template>
   <div>
-    <van-nav-bar title="交易"/>
+    <van-nav-bar title="Trade" right-text="Refresh">
+     <van-switch v-model="check"  size="24px"  slot="right"   @change="switchChange" />
+   </van-nav-bar>
+   
     <van-popup v-model="showSwitch" style="width: 80%">
       <br /><br />
       &nbsp;&nbsp;&nbsp; id： {{ billForShow.id }} <br /><br />
-      &nbsp;&nbsp;&nbsp; 金额： ￥ {{ billForShow.price }} <van-button type="default" size="small" @click="copy(billForShow.price)">复制</van-button><br /><br />
-      &nbsp;&nbsp;&nbsp; 银行卡号： {{ billForShow.bankCardNo }} <van-button type="default" size="small" @click="copy(billForShow.bankCardNo)">复制</van-button><br /><br />
-      &nbsp;&nbsp;&nbsp; 银行：{{ billForShow.bankName }}<br /><br />
-      &nbsp;&nbsp;&nbsp; 姓名：{{ billForShow.bankAccountName }} <van-button type="default" size="small" @click="copy(billForShow.bankAccountName)">复制</van-button><br /><br />
-      &nbsp;&nbsp;&nbsp; 第三方订单号：{{ billForShow.thirdBillId }}<br /><br />
-      <div style="color: red">&nbsp;&nbsp;&nbsp;订单状态：{{ getBillStatus(billForShow) }}</div><br /><br />
-      &nbsp;&nbsp;&nbsp; 通知：{{ getNotice(billForShow) }}<br /><br />
+      &nbsp;&nbsp;&nbsp; Amount: ￥ {{ billForShow.price }} <van-button type="default" size="small" @click="copy(billForShow.price)">Copy</van-button><br /><br />
+      &nbsp;&nbsp;&nbsp; Bank card number: {{ billForShow.bankCardNo }} <van-button type="default" size="small" @click="copy(billForShow.bankCardNo)">Copy</van-button><br /><br />
+      &nbsp;&nbsp;&nbsp; Bank:{{ billForShow.bankName }}<br /><br />
+      &nbsp;&nbsp;&nbsp; Name:{{ billForShow.bankAccountName }} <van-button type="default" size="small" @click="copy(billForShow.bankAccountName)">Copy</van-button><br /><br />
+      &nbsp;&nbsp;&nbsp; Third party order number:{{ billForShow.thirdBillId }}<br /><br />
+      <div style="color: red">&nbsp;&nbsp;&nbsp;Order Status：{{ getBillStatus(billForShow) }}</div><br /><br />
+      &nbsp;&nbsp;&nbsp; notify:{{ getNotice(billForShow) }}<br /><br />
     </van-popup>
     <van-cell-group id = "top">
-      <van-field v-model="data.createTime" type="date" placeholder="时间"/>
-      <van-field v-model="data.merchantName" placeholder="商户名"/>
-      <van-field v-model="data.thirdBillId" placeholder="第三方订单号"/>
-      <van-field v-model="data.billId" placeholder="订单号"/>
+      <van-field v-model="data.createTime" type="date" placeholder="Time"/>
+      <van-field v-model="data.merchantName" placeholder="Merchant name"/>
+      <van-field v-model="data.thirdBillId" placeholder="Third party order number"/>
+      <van-field v-model="data.billId" placeholder="Order number"/>
       <van-field
         readonly
         clickable
         name="picker"
         :value="value"
-        placeholder="点击选择订单状态"
+        placeholder="Click to select order status"
         @click="showPicker = true"
       />
       <van-popup v-model="showPicker" position="bottom">
@@ -34,15 +37,32 @@
         />
       </van-popup>
       <div style="margin: 10px;">
-        <van-button type="primary" icon="search" block round @click="query(1)">搜索</van-button>
+        <van-button type="info" icon="search" block  @click="query(1)">Search</van-button>
       </div>
-      <div style="margin: 10px;">
-        <van-button type="default" icon="down" block round >下载</van-button>
+      <!-- <div style="margin: 10px;">
+        <van-button type="default" icon="down" block round >Download</van-button>
         <br />
-      </div>
+      </div> -->
     </van-cell-group>
-    <div class="container">
-      <van-list style="margin-top: 10px;">
+    <div  style="padding-bottom: 60px;">
+      
+    <van-tabs v-model="active" @change="onchange">
+      <van-tab title="Payment orders"></van-tab>
+      <van-tab title="Collection orders"></van-tab>
+    </van-tabs>
+
+    <van-list style="margin-top: 10px"  v-for="(item,index) in list" :key="index">
+      <van-cell title="商户单号" :value="item.order" />
+      <van-cell title="支付姓名" :value="item.name"/>
+      <van-cell title="收款时间" :value="item.time" />
+      <van-cell title="支付金额" :value="item.saleDate" />
+      <van-cell>
+        <van-button type="info"  size="small"> 确认支付</van-button>
+        <van-button plain type="info" size="small"> 取消支付</van-button>
+      </van-cell>
+    </van-list>
+  </div>
+      <!-- <van-list style="margin-top: 10px;">
         <van-cell
             v-for="(item,index) in list"
             :key="index"
@@ -51,8 +71,8 @@
             :value="'￥'+item.price + '  '+ getBillStatus(item)+'  ' + getNotice(item)+'  ' + item.bankCardNo+'    ' + item.bankName+'  ' + item.bankAccountName"
             @click="showContent(item)"
         />
-      </van-list>
-    </div>
+      </van-list> -->
+  
 
     <Footer page="buy"></Footer>
   </div>
@@ -77,12 +97,29 @@ export default {
         createTime: ""
       },
       active: 0,
+      check:false,
       list: [],
+      // 买入数据
+      list1: [
+        { name: "leao", order: 28918291289291, saleDate: 1111 ,time:'2020-10-02'},
+        { name: "well", order: 932323203323, saleDate: 66 ,time:'2020-10-04'},
+        { name: "right", order: 3232323232, saleDate: 33 ,time:'2020-12-02'},
+        { name: "lufu", order: 787878787878, saleDate: 55 ,time:'2021-11-02'},
+        { name: "lufu", order: 787878787878, saleDate: 55 ,time:'2021-11-02'},
+        { name: "lufu", order: 787878787878, saleDate: 55 ,time:'2021-11-02'},
+      ],
+      // 卖出数据
+      list2: [
+        { name: "卖出1", price: 200, saleDate: 1566893214215 },
+        { name: "卖出2", price: 500, saleDate: 1566893114215 },
+        { name: "卖出3", price: 500, saleDate: 1566893114215 }
+      ],
       value: '',
       columns: ['全部','未支付', '成功', '失败'],
       showPicker: false,
       showSwitch: false,
-      billForShow: ""
+      billForShow: "",
+      timer:null
     };
   },
   computed: {
@@ -96,6 +133,8 @@ export default {
     if(!this.isLogin){
       this.$router.push("/login")
     }
+    let index = this.active + 1;
+    this.list = this[`list${index}`]; // this.list1
     // let index = this.active + 1;
     // const obj = {
     //   id: "1", price: 400, thirdBillId: 1566893214215, billStatus: 1, notice: 1,createTime: '2021-06-15',
@@ -103,12 +142,29 @@ export default {
     // };
     // const mockData = new Array(20).fill(obj);
     // this.list = mockData;
+  
     this.query(1);
+    
+ 
+   
   },
   components: {
     Footer
   },
   methods: {
+    onchange(index) {
+      this.list = this[`list${index + 1}`];
+    },
+    switchChange (flag) {
+      this.check = flag;
+      if (!flag) {
+        clearInterval(this.timer)
+      } else {
+        this.timer = setInterval(()=>{
+      console.log('定时刷新')
+      this.query(1);
+    },5000)
+      }},
     query(pageNumber) {
       let url = this.baseURL + "wap/list/"
       let token = localStorage.getItem("token")
@@ -207,13 +263,45 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style scoped="scss">
 .container {
   width: 100%;
   padding-bottom: 53px;
 }
 .container .van-cell__title, .container  .van-cell__value {
   flex: inherit;
+}
+.van-nav-bar {
+  background-color: #1678ff !important;
+ 
+}
+
+
+
+::v-deep .van-tabs__line {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0;
+  z-index: 1;
+  width: 1.06667rem;
+  height: 0.08rem;
+  background-color: #1678ff !important;
+  border-radius: 0.08rem;
+}
+.van-cell__value--alone {
+    color: #323233;
+    text-align: right;
+}
+.van-button--small {
+  margin-left: 0.3rem;
+}
+
+.van-tab--active {
+  color: #1678ff !important;
+  font-weight: 500;
+}
+::v-deep .van-nav-bar__title {
+    color: white;
 }
 </style>
 

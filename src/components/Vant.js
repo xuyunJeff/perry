@@ -11,6 +11,7 @@ import {
   Dialog,
   Toast,
   Swipe,
+  Switch,
   SwipeItem,
   Area,
   NavBar,
@@ -19,12 +20,19 @@ import {
   Sticky,
   RadioGroup,
   Radio,
+  Card,
+  Tabbar,
   Search,
   Picker,
-  Form
+  Form,
+  Uploader,
+  TabbarItem
 } from "vant";
 
 Vue.use(Search);
+Vue.use(Uploader);
+Vue.use(Card);
+Vue.use(Switch);
 Vue.use(RadioGroup);
 Vue.use(Radio);
 Vue.use(Icon);
@@ -35,6 +43,8 @@ Vue.use(Cell);
 Vue.use(Button);
 Vue.use(Popup);
 Vue.use(Field);
+Vue.use(Tabbar);
+Vue.use(TabbarItem);
 Vue.use(Dialog);
 Vue.use(Toast);
 Vue.use(Swipe);

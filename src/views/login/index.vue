@@ -1,19 +1,18 @@
 <template>
   <header class="login">
-    <van-icon name="point-gift-o" class="orange mt-30 logo"></van-icon>
+    <van-icon name="balance-list-o" class="orange mt-30 logo" color="#1678ff"></van-icon>
     <div class>
       <div class="handset ml-20 mr-20 flex jc-sb pb-5">
-        <input v-model="username" class="f14" type="text" placeholder="账号" />
+        <van-field v-model="data.username"   placeholder="Account"/>
       </div>
       <div class="handset ml-20 mr-20 flex jc-sb pb-5">
-        <input v-model="password" class="f14" type="password" placeholder="密码" />
+        <van-field v-model="data.password"  type="password" placeholder="Password"/>
       </div>
       <div class="handset ml-20 mr-20 flex jc-sb mt-20 pb-5">
-        <input v-model="code" class="f14" placeholder="谷歌验证码" />
+        <van-field v-model="data.code"   placeholder="Google verification code"/>
       </div>
-
       <!-- 登录 -->
-      <button @click="login" class="butt ml-20 mr-20 fff">登录</button>
+      <button @click="login" class="butt ml-20 mr-20 fff">Login</button>
     </div>
   </header>
 </template>
@@ -23,21 +22,19 @@
 export default {
   data() {
     return {
+      data:{
       username: "",
       password: "",
       code: ""
+      }
+      
     };
   },
   methods: {
     login() {
+      this.$router.push("/my");
       let url = "/wap/login";
-      // 请求参数
-      let data = {
-        username: this.username,
-        password: this.password,
-        code: this.code
-      };
-      this.$axios.post(url, data).then(res => {
+      this.$axios.post(url, this.data).then(res => {
         console.log(res)
         // 修改登陆状态
         this.$store.commit("updateLogin", true);
@@ -49,7 +46,7 @@ export default {
         this.$store.commit("updateUsername", this.username);
         this.$router.push("/my");
       }).catch(err=> {
-        console.log('登陆失败')
+        console.log('login fail')
       });
     }
   }

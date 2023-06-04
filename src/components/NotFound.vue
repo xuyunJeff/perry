@@ -1,6 +1,6 @@
 <template>
   <div class="not-found">
-    <van-nav-bar title left-text="返回" left-arrow @click-left="$router.go(-1)"></van-nav-bar>
+    <van-nav-bar title left-text="Back" left-arrow @click-left="$router.go(-1)"></van-nav-bar>
     <img src="../assets/img/not.jpeg" alt />
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <van-nav-bar title="我的订单" left-text="返回" @click-left="back" left-arrow/>
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+    <van-nav-bar title="My Order" left-text="Back" @click-left="back" left-arrow/>
+    <van-list v-model="loading" :finished="finished" finished-text="No More" @load="onLoad">
       <template v-for="(item,index) in list">
         <van-card
           :num="index"

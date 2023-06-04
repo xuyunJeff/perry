@@ -1,8 +1,8 @@
 <template>
   <div>
-    <van-nav-bar title="首页" />
+    <van-nav-bar title="Home" />
     <div class="main">
-      <iframe src="https://www.baidu.com" class="main-iframe" />
+      <!-- <iframe src="https://www.baidu.com" class="main-iframe" /> -->
     </div>
     <Footer page="buy"></Footer>
   </div>
@@ -13,7 +13,9 @@ import Footer from "@/components/Footer";
 
 export default {
   data() {
-    
+    return {
+
+    }
   },
   created() {
     this.getData();

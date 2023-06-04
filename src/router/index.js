@@ -14,21 +14,21 @@ const router = new Router({
       path: "/index",
       component: () => import("@/views/index/index"),
       meta: {
-        title: "日总牛逼",
+        title: "Payment System",
         keepAlive: true
       }
     },
     {
       path: "/buy",
       meta: {
-        title: "交易"
+        title: "Trade"
       },
       component: () => import("@/views/buy/index")
     },
     {
       path: "/account",
       meta: {
-        title: "流水"
+        title: "Trade"
       },
       component: () => import("@/views/account/index")
     },
@@ -40,16 +40,44 @@ const router = new Router({
         {
           path: "center",
           meta: {
-            title: "个人中心"
+            title: "Personal Center"
           },
           component: () => import("@/views/my/children/center")
         },
         {
           path: "set",
           meta: {
-            title: "设置"
+            title: "Set Up"
           },
           component: () => import("@/views/my/children/set")
+        },
+        {
+          path: "card",
+          meta: {
+            title: "Bind Bank Card"
+          },
+          component: () => import("@/views/my/children/card")
+        },
+        {
+          path: "add",
+          meta: {
+            title: "Add Bank Card"
+          },
+          component: () => import("@/views/my/children/add")
+        },
+        {
+          path: "code",
+          meta: {
+            title: "Add QR code"
+          },
+          component: () => import("@/views/my/children/code")
+        },
+        {
+          path: "addCode",
+          meta: {
+            title: "Add QR code"
+          },
+          component: () => import("@/views/my/children/addCode")
         }
       ]
     },
@@ -57,7 +85,7 @@ const router = new Router({
       path: "/login",
       component: () => import("@/views/login/index"),
       meta: {
-        title: "登陆"
+        title: "Login"
       }
     },
     {
