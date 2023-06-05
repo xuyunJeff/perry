@@ -5,6 +5,7 @@ import {
   Tabs,
   List,
   Cell,
+  Tag,
   Button,
   Popup,
   Field,
@@ -26,10 +27,19 @@ import {
   Picker,
   Form,
   Uploader,
+  Row,
+  Col,
+  Calendar,
+  DatetimePicker,
   TabbarItem
 } from "vant";
 
 Vue.use(Search);
+Vue.use(Calendar);
+Vue.use(DatetimePicker);
+Vue.use(Tag);
+Vue.use(Row);
+Vue.use(Col);
 Vue.use(Uploader);
 Vue.use(Card);
 Vue.use(Switch);

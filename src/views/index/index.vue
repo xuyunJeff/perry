@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="Home" />
     <div class="main">
-      <!-- <iframe src="https://www.baidu.com" class="main-iframe" /> -->
+      <img src="../../assets/index.jpeg" alt />
     </div>
     <Footer page="buy"></Footer>
   </div>
@@ -51,4 +51,12 @@ export default {
     width: 100%;
     height: 100%;
   }
-</style>>
+
+::v-deep .van-nav-bar__title {
+  color: white;
+}
+
+.van-nav-bar {
+  background-color: #1678ff !important;
+}
+</style>

@@ -1,6 +1,7 @@
 // import axios from "axios";
 import store from "../store";
 import router from "../router";
+import { Toast } from 'vant';
 // 创建axios实例
 const service = axios.create({
     baseURL: process.env.VUE_APP_URL, // api 的 VUE_APP_URL
@@ -38,7 +39,7 @@ service.interceptors.response.use(
         } else if (res.code == "-1" || res.code == "500" ) {
             // code为603代表token已经失效,
             // 提示用户,然后跳转到登陆页面
-            alert(res.msg)
+            Toast.fail(res.msg);
             router.push("/login");
         } else {
             Promise.reject("Unknown Error");

@@ -4,12 +4,12 @@
    </van-nav-bar>
    <van-cell-group>
   <van-field
-    :value="username"
+    :value="name"
     required
     clearable
     label="Name"
     icon="question-o"
-    placeholder="请输入用户名"
+    placeholder="please input name"
     bind:click-icon="onClickIcon"
   />
 
@@ -17,7 +17,7 @@
     :value="bankNo"
     type="password"
     label="Bank Card "
-    placeholder="请输入银行卡号"
+    placeholder="please input card number"
     required
     border
   />
@@ -25,15 +25,15 @@
     :value="bankNo"
     type="password"
     label="Bank Type"
-    placeholder="请输入银类型卡号"
+    placeholder="please input bank type"
     required
     border
   />
    <van-field
     :value="bankNo"
     type="password"
-    label="Reamk"
-    placeholder="请输入备注"
+    label="Remark"
+    placeholder="please input remark "
     required
     border
   />
@@ -51,7 +51,7 @@ import {mapGetters} from "vuex";
 export default {
   data() {
     return {
-      username:'',
+      name:'',
       bankNo:'',
       src:'https://img.yzcdn.cn/vant/cat.jpeg',
       fileList: [

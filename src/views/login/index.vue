@@ -32,18 +32,21 @@ export default {
   },
   methods: {
     login() {
-      this.$router.push("/my");
       let url = "/wap/login";
       this.$axios.post(url, this.data).then(res => {
+        const {user,balance} = res;
+        const {username} = user;
         console.log(res)
         // 修改登陆状态
         this.$store.commit("updateLogin", true);
         // 把token存入store
         let token = "JSESSIONID=" + res.token;
         localStorage.setItem("token",token)
-        localStorage.setItem("username",this.username)
+        localStorage.setItem("username",username)
         this.$store.commit("updateToken", token);
-        this.$store.commit("updateUsername", this.username);
+        this.$store.commit("updateUsername", username);
+        this.$store.commit("updateBalance", balance.balance)
+        this.$store.commit("updateUser", user);
         this.$router.push("/my");
       }).catch(err=> {
         console.log('login fail')

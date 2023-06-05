@@ -8,12 +8,17 @@ const config = {
     state: {
         isLogin: false,
         username: '',
-        token: ''
+        balance:'',
+        token: '',
+        user:{}
+        
     },
     getters: {
         isLogin: state => state.isLogin,
         token: state => state.token,
-        username: state => state.username
+        username: state => state.username,
+        balance: state => state.balance,
+        user: state => state.user
     },
     mutations: {
         updateLogin(state, payload) {
@@ -24,6 +29,12 @@ const config = {
         },
         updateUsername(state, payload) {
             state.username = payload;
+        },
+        updateUser(state, payload) {
+            state.user = payload;
+        },
+        updateBalance(state, payload) {
+            state.balance = payload;
         }
     },
     actions: {}
